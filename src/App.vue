@@ -27,6 +27,16 @@
 				
 				<v-list-item link>
 					<v-list-item-action>
+						<router-link to="/Workshops">Workshops
+						</router-link>
+					</v-list-item-action>
+					<v-list-item-content>
+						<v-list-item-title>Edit/Add Workshops</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				
+				<v-list-item link>
+					<v-list-item-action>
 						<router-link to="/PromoBar">Edit Promo Bar
 						</router-link>
 					</v-list-item-action>
@@ -106,7 +116,7 @@
 				dark
 		>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-			<v-toolbar-title>Merce Cunningham Trust -- App. Version: Beta 6</v-toolbar-title>
+			<v-toolbar-title>Merce Cunningham Trust -- App. Version: 1.2 Production</v-toolbar-title>
 		</v-app-bar>
 		
 		<v-main>

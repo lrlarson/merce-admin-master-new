@@ -99,7 +99,7 @@
 										<td><em>Original</em></td>
 									</tr>
 									<tr
-											v-for="item in associatedDancersArray"
+											v-for="item in categoriesForBookArray"
 											:key="item.ID"
 											@click="associatedDancerClick(item.ID)"
 									>

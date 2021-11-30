@@ -13,6 +13,7 @@ import DanceDetail from "@/components/DanceDetail";
 import PerformanceLicenses from "@/components/PerformanceLicenses";
 import LicenseDetail from "@/components/LicenseDetail";
 import WebVideos from "@/components/WebVideos";
+import Workshops from "@/components/Workshops";
 import store from "@/store";
 
 
@@ -88,7 +89,13 @@ const routes = [
     path:'/WebVideos',
     name:'WebVideos',
     component:WebVideos
+  },
+  {
+    path:'/Workshops',
+    name:'Workshops',
+    component:Workshops
   }
+
 
 ]
 

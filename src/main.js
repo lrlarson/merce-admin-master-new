@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 
 
 window.$ = window.jQuery = require('jquery');
-Vue.use(Toast);
+  Vue.use(Toast);
 
 Vue.use(VueGlobalVariable, {
   globals: {

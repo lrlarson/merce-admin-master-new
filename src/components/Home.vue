@@ -20,6 +20,9 @@
 				<v-btn block elevation="14" color="accent"  x-large @click="goToDances">Dances</v-btn>
 			</v-col>
 			<v-col>
+				<v-btn block elevation="14" color="accent"  x-large @click="goToWorkshops">Workshops</v-btn>
+			</v-col>
+			<v-col>
 				<v-btn block elevation="14" color="accent"  x-large @click="goToLicenses">Licenses</v-btn>
 			</v-col>
 			<v-col>
@@ -58,6 +61,9 @@ export default {
 		},
 		goToWebVideos(){
 			router.push({name:'WebVideos'});
+		},
+		goToWorkshops(){
+			router.push({name:'Workshops'});
 		}
 	}
 }

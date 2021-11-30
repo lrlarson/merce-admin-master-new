@@ -153,6 +153,7 @@ export default {
 			this.classObject.CLASSLOCATION='';
 			this.classObject.CLASSTEACHER='';
 			this.classObject.CLASSTITLE='';
+			this.classObject.CLASSTYPEID=0;
 		},
 		createClassObjects(){
 			this.classObject.CLASSDATE='';
