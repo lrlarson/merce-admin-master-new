@@ -106,6 +106,16 @@
 					</v-list-item-content>
 				</v-list-item>
 				
+				<v-list-item link>
+					<v-list-item-action>
+						<router-link to="/Music">Music
+						</router-link>
+					</v-list-item-action>
+					<v-list-item-content>
+						<v-list-item-title>Edit Music</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				
 				
 			</v-list>
 		</v-navigation-drawer>
