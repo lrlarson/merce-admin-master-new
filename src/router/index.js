@@ -14,6 +14,7 @@ import PerformanceLicenses from "@/components/PerformanceLicenses";
 import LicenseDetail from "@/components/LicenseDetail";
 import WebVideos from "@/components/WebVideos";
 import Workshops from "@/components/Workshops";
+import Music from "@/components/Music";
 import store from "@/store";
 
 
@@ -94,7 +95,12 @@ const routes = [
     path:'/Workshops',
     name:'Workshops',
     component:Workshops
-  }
+  },
+  {
+    path:'/Music',
+    name:'Music',
+    component:Music
+  },
 
 
 ]

@@ -28,6 +28,9 @@
 			<v-col>
 				<v-btn block elevation="14" color="accent"  x-large @click="goToWebVideos">Home Page Videos</v-btn>
 			</v-col>
+			<v-col>
+				<v-btn block elevation="14" color="accent"  x-large @click="goToMusic">Music</v-btn>
+			</v-col>
 		</v-row>
 	</v-container>
 </template>
@@ -64,6 +67,9 @@ export default {
 		},
 		goToWorkshops(){
 			router.push({name:'Workshops'});
+		},
+		goToMusic(){
+			router.push({name:'Music'});
 		}
 	}
 }

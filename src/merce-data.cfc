@@ -10,7 +10,86 @@
         <cfreturn this/>
     </cffunction> 
         
+    <cffunction name="deleteWorkshop" access="remote"   returntype="Any" returnformat="JSON">
+        <cfquery name="id" datasource="merce_5">
+            delete from tbl_Workshops
+            where id = #id#
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+    
 
+    <cffunction name="insertNewWorkshop" access="remote"   returntype="Any" returnformat="JSON">
+        <cfargument name="workshop" type="any">
+        <cfset workshop = DeserializeJSON(workshop)> 
+        <cfquery name="work" datasource="merce_5">
+            insert into tbl_Workshops (title, dance, dateString, startDate, workshopType, leader, location, endDate)
+            values
+            (
+            '#workshop.TITLE#',
+            '#workshop.DANCE#',
+            '#workshop.DATESTRING#',
+            '#workshop.STARTDATE#',
+            #workshop.WORKSHOPTYPE#,
+            '#workshop.LEADER#',
+            '#workshop.LOCATION#',
+            '#workshop.ENDDATE#'
+            )
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+
+    <cffunction name="updateWorkshop" access="remote"   returntype="Any" returnformat="JSON">
+        <cfargument name="workshop" type="any">
+        <cfset workshop = DeserializeJSON(workshop)> 
+        <cfquery name="edit" datasource="merce_5">
+            update tbl_Workshops
+            set title = '#workshop.TITLE#',
+            dance = '#workshop.DANCE#',
+            dateString = '#workshop.DATESTRING#',
+            startDate = '#workshop.STARTDATE#',
+            workshopType = #workshop.WORKSHOPTYPE#,
+            leader = '#workshop.LEADER#',
+            location = '#workshop.LOCATION#',
+            endDate = '#workshop.ENDDATE#'
+            where id = #workshop.ID#
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+
+    <cffunction name="getWorkshop" access="remote"   returntype="Any" returnformat="JSON">
+        <cfargument name="id" type="numeric" required="true">
+        <cfquery name="workShops" datasource="merce_5">
+            select tbl_Workshops.id, title, dance, dateString, convert(varchar(16), startDate, 23) as startDate,convert(varchar(16), endDate, 23) as endDate, tbl_WorkshopTypes.workshopType as workShopTypeString, tbl_Workshops.workshopType, leader, location, PDFLink, endDate
+            from tbl_Workshops inner join tbl_WorkshopTypes on tbl_Workshops.workshopType = tbl_WorkshopTypes.id
+            where tbl_Workshops.id = #id#
+        </cfquery>
+         <cfset arrGirls = QueryToStruct(workShops) />
+         <cfset objectWrapper = structNew()>
+         <cfset objectWrapper.results = #arrGirls#>
+         <cfreturn objectWrapper> 
+    </cffunction>
+
+    <cffunction name="getAllWorkshops" access="remote"   returntype="Any" returnformat="JSON">
+        <cfquery name="workShops" datasource="merce_5">
+            select tbl_Workshops.id, title, dance, dateString, startDate, tbl_WorkshopTypes.workshopType as workShopTypeString, tbl_Workshops.workshopType, leader, location, PDFLink, endDate
+            from tbl_Workshops inner join tbl_WorkshopTypes on tbl_Workshops.workshopType = tbl_WorkshopTypes.id
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(workShops) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
+    <cffunction name="getWorkShopTypes" access="remote"   returntype="Any" returnformat="JSON">
+        <cfquery name="types" datasource="merce_5">
+            select id as data, workshopType as label from tbl_WorkshopTypes
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(types) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
    
 
     <cffunction name="updateHomePageVideo" access="remote"   returntype="Any" returnformat="JSON">
@@ -440,6 +519,57 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
                     <cfset objectWrapper.results = #arrGirls#>
                     <cfreturn objectWrapper> 
     </cffunction>
+
+    <cffunction name="getAllMusic" access="remote" returntype="Any" returnformat="JSON">
+        <cfargument name="danceID" type="numeric">
+        <cfquery datasource="merce_5" name="availableMusic">
+             SELECT    tbl_Music.id, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composers.Composer_FN, tbl_Music.Title, dbo.tbl_Music.title + ', ' + dbo.tbl_Composers.Composer_LN
+         AS label, dbo.tbl_Composers.Composer_LN + ', ' + dbo.tbl_Composers.Composer_FN as fullName,tbl_composers.id as composerID
+            FROM         tbl_Music INNER JOIN
+                          tbl_Composers ON tbl_Music.Composer = tbl_Composers.id
+            order by Title
+        </cfquery>
+       <cfset arrGirls = QueryToStruct(availableMusic) />
+                        <cfset objectWrapper = structNew()>
+                        <cfset objectWrapper.results = #arrGirls#>
+                        <cfreturn objectWrapper> 
+        </cffunction>
+
+        <cffunction name="getMusicDetails" access="remote" returntype="Any" returnformat="JSON">
+            <cfargument name="id" type="any" >
+            <cfquery name="queryName" datasource="merce_5">
+                 SELECT    tbl_Music.id, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composers.Composer_FN, tbl_Music.Title,tbl_composers.id as composerID
+            FROM         tbl_Music INNER JOIN
+                          tbl_Composers ON tbl_Music.Composer = tbl_Composers.id
+            where tbl_Music.id = #id#              
+            </cfquery>
+           <cfset arrGirls = QueryToStruct(queryName) />
+           <cfset objectWrapper = structNew()>
+           <cfset objectWrapper.results = #arrGirls#>
+           <cfreturn objectWrapper> 
+            </cffunction>
+
+            <cffunction name="updateMusic" access="remote" returntype="Any" returnformat="JSON">
+                <cfargument name="MusicObject" type="any" >
+                <cfset MusicObject = DeserializeJSON(MusicObject)> 
+                <cfquery name="queryName" datasource="merce_5">
+                 update tbl_Music
+                set Title = '#MusicObject.TITLE#',Composer=#MusicObject.COMPOSERID#
+                where id = #MusicObject.ID#
+                  </cfquery>
+                <cfreturn 1> 
+                </cffunction>
+
+            <cffunction name="getComposersNew" access="remote" returntype="Any" returnformat="JSON">
+                <cfquery name="queryName" datasource="merce_5">
+                  select * from tbl_Composers
+                    order by Composer_LN
+                </cfquery>
+                <cfset arrGirls = QueryToStruct(queryName) />
+                <cfset objectWrapper = structNew()>
+                <cfset objectWrapper.results = #arrGirls#>
+                <cfreturn objectWrapper> 
+                </cffunction>
 
          <cffunction name="deleteLightingAssociation" access="remote" returntype="Any" returnformat="JSON">
         <cfargument name="id" type="any" >
@@ -1754,69 +1884,7 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
         <cfreturn promo>
     </cffunction>
 
-    <cffunction name="insertNewWorkshop" access="remote" returntype="any">
-        <cfargument name="workshop" type="any">
-        <cfquery name="work" datasource="merce_5">
-            insert into tbl_Workshops (title, dance, dateString, startDate, workshopType, leader, location, PDFLink, endDate)
-            values
-            (
-            '#workshop.title#',
-            '#workshop.dance#',
-            '#workshop.dateString#',
-            #workshop.startDate#,
-            #workshop.workshopType#,
-            '#workshop.leader#',
-            '#workshop.location#',
-            '#workshop.PDFLink#',
-            #workshop.endDate#
-            )
-            select @@identity
-        </cfquery>
-        <cfreturn work>
-    </cffunction>
-
-    <cffunction name="updateWorkshop" access="remote" returntype="any">
-        <cfargument name="workshop" type="any">
-        <cfquery name="edit" datasource="merce_5">
-            update tbl_Workshops
-            set title = '#workshop.title#',
-            dance = '#workshop.dance#',
-            dateString = '#workshop.dateString#',
-            startDate = #workshop.startDate#,
-            workshopType = #workshop.workshopType#,
-            leader = '#workshop.leader#',
-            location = '#workshop.location#',
-            PDFLink = '#workshop.PDFLink#',
-            endDate = #workshop.endDate#
-            where id = #workshop.id#
-        </cfquery>
-        <cfreturn 1>
-    </cffunction>
-
-    <cffunction name="getWorkshop" access="remote" returntype="any">
-        <cfargument name="id" type="numeric" required="true">
-        <cfquery name="workShops" datasource="merce_5">
-            select tbl_Workshops.id, title, dance, dateString, startDate, tbl_WorkshopTypes.workshopType as workShopTypeString, tbl_Workshops.workshopType, leader, location, PDFLink, endDate
-            from tbl_Workshops inner join tbl_WorkshopTypes on tbl_Workshops.workshopType = tbl_WorkshopTypes.id
-            where tbl_Workshops.id = #id#
-        </cfquery>
-        <cfreturn workShops>
-    </cffunction>
-
-    <cffunction name="getAllWorkshops" access="remote" returntype="any">
-        <cfquery name="workShops" datasource="merce_5">
-            select tbl_Workshops.id, title, dance, dateString, startDate, tbl_WorkshopTypes.workshopType as workShopTypeString, tbl_Workshops.workshopType, leader, location, PDFLink, endDate
-            from tbl_Workshops inner join tbl_WorkshopTypes on tbl_Workshops.workshopType = tbl_WorkshopTypes.id
-        </cfquery>
-        <cfreturn workShops>
-    </cffunction>
-
-    <cffunction name="getWorkShopTypes" access="remote" returntype="any">
-        <cfquery name="types" datasource="merce_5">
-            select id as data, workshopType as label from tbl_WorkshopTypes
-        </cfquery>
-        <cfreturn types>
-    </cffunction>
+ 
 
 
     <cffunction name="insertNewMemory" access="remote" returntype="any">
