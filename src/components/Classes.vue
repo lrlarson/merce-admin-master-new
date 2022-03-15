@@ -64,6 +64,15 @@
 			<v-text-field
 					v-model="classObject.CLASSTITLE" label="Class Title"></v-text-field>
 		</v-col>
+		<v-col md-2 lg-2>
+			<v-select
+					label="Class Teacher"
+					v-model="classObject.CLASSTEACHERID"
+					:items="classTeachersArray"
+					item-text="FELLOWNAME"
+					item-value="ID"
+			></v-select>
+		</v-col>
 	</v-row>
 	<v-row>
 		<v-col md-2 lg-2>
@@ -95,6 +104,7 @@ export default {
 		classTypes:[],
 		editMode:false,
 		newClassMode:false,
+		classTeachersArray:[],
 		picker: new Date().toISOString().substr(0, 10),
 		headers: [
 			{
@@ -121,6 +131,13 @@ export default {
 			.then(function (result){
 				vm.classes = result.data.RESULTS;
 			})
+		},
+		getClassTeachers(){
+			var vm= this;
+			vm.axios.get(vm.dataURL + 'method=getTeachers')
+					.then(function(result){
+						vm.classTeachersArray = result.data.RESULTS;
+					})
 		},
 		getClassDetails(id){
 			var vm= this;
@@ -267,6 +284,7 @@ export default {
 		this.getClasses();
 		this.getClassTypes();
 		this.createClassObjects();
+		this.getClassTeachers();
 	}
 }
 </script>

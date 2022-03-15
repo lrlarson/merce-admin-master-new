@@ -46,24 +46,36 @@
 			</v-col>
 		</v-row>
 		<v-layout row wrap>
-			<v-flex md2 xs12 v-if="selectedPersonType>0">
+			<v-flex md2 xs12  >
+				<v-img :src="'https://www.mercecunningham.org/images/danceImagesUpload/classImages/' + personObject.CLASSTEACHERIMAGE">
+				</v-img>
+			</v-flex>
+			<v-flex md2 xs12 v-if="selectedPersonType>0 ">
 				<v-text-field v-model="personObject.FELLOWNAME" label="Name" ></v-text-field>
 			</v-flex>
 			<v-flex md1 xs12 v-if="selectedPersonType>0">
 				<v-checkbox v-model="personObject.ACTIVE" label="Active" >Active</v-checkbox>
 			</v-flex>
-			<v-flex md9 xs12 v-if="selectedPersonType > 1">
+			<v-flex md9 xs12 v-if="selectedPersonType > 1 && selectedPersonType != 4">
 				<v-text-field v-model="personObject.STATUS" label="Status Line" ></v-text-field>
 			</v-flex>
+			
 		</v-layout>
 		<v-layout row wrap>
-			<v-flex md4 xs12 v-if="selectedPersonType > 0">
+			<v-flex md4 xs12 v-if="selectedPersonType > 0 && selectedPersonType !=4">
 				<v-text-field label="Main Bio" disabled></v-text-field>
 				<ckeditor :editor="editor" v-model="personObject.TEXT" :config="editorConfig" Label="Main Bio"></ckeditor>
 			</v-flex>
-			<v-flex md3 xs12 v-if="selectedPersonType > 1" style="margin-left: 10px;" >
+			<v-flex md3 xs12 v-if="selectedPersonType > 1 && selectedPersonType != 4" style="margin-left: 10px;" >
 				<v-text-field label="Additional Bio" disabled></v-text-field>
 				<ckeditor :editor="editor" v-model="personObject.MOREBIO" :config="editorConfig"></ckeditor>
+			</v-flex>
+			<v-flex md4 xs12 >
+				<div class="DashboardContainer hideUPPY" id="uppyHolder">Class Teacher Image</div>
+			</v-flex>
+			<v-flex md2 xs12  >
+				<v-img :src="'https://www.mercecunningham.org/images/danceImagesUpload/classImages/' + personObject.CLASSSTEACHERIMAGE ">
+				</v-img>
 			</v-flex>
 			<v-flex md3 xs12 v-if="selectedPersonType===1" >
 				<v-text-field v-model="personObject.YEARSSTRING" label="Fellowship Years, comma separated"></v-text-field>
@@ -122,6 +134,11 @@
 <script>
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+const Uppy = require("@uppy/core");
+const Dashboard = require("@uppy/dashboard");
+const XHRUpload = require("@uppy/xhr-upload");
+require('@uppy/core/dist/style.css')
+require('@uppy/dashboard/dist/style.css')
 
 export default {
 	name: "People",
@@ -141,6 +158,7 @@ export default {
 		personTypeSelected:false,
 		addMode:false,
 		editMode:false,
+		classTeacherMode:false,
 		headers: [
 			{text: "Name", value: "FELLOWNAME", sortable:true},
 			{text: "Type", value: "TYPE",sortable:true},
@@ -171,8 +189,42 @@ export default {
 			console.log(this.selectedPersonType);
 			this.getPeopleTypeArray(this.selectedPersonType);
 			this.personTypeSelected = true;
+			var element = document.getElementById("uppyHolder");
+			if (this.selectedPersonType == 4){
+				this.classTeacherMode=true;
+				element.classList.remove("hideUPPY")
+				element.classList.add("showUPPY");
+			}else{
+				this.classTeacherMode=false;
+				element.classList.remove("showUppy")
+				element.classList.add("hideUppy");
+			}
 			//this.clearPersonObject();
 			
+		},
+		initUppy(){
+			// alert('in uppy')
+			const uppyLarge = Uppy({ debug: true })
+					.use(Dashboard, {
+						trigger: ".UppyModalOpenerBtn",
+						inline: true,
+						target: ".DashboardContainer",
+						height: 300
+					})
+					.use(XHRUpload, {
+						endpoint: "/images/danceImagesUpload/uploadClassTeacherImages.cfm",
+						formData: true,
+						fieldName: "fileData"
+					});
+			
+			uppyLarge.on("complete", result => {
+				// eslint-disable-next-line
+				console.log(
+						"Upload complete! We’ve uploaded these files:",
+						result.successful
+				);
+				this.personObject.CLASSSTEACHERIMAGE = result.successful[0].name;
+			});
 		},
 		deleteExperience(experienceID){
 			console.log(experienceID);
@@ -406,6 +458,7 @@ export default {
 					vm.personObject = vm.personArray[0];
 					vm.personObject.TEXT = vm.personObject.TEXT.replace(/[\u2018\u2019]/g, "'")
 							.replace(/[\u201C\u201D]/g, '"');
+					console.log(vm.personObject.CLASSSTEACHERIMAGE);
 					if (vm.selectedPersonType === 1){
 						vm.getFellowExperience(value.ID);
 					}
@@ -425,6 +478,7 @@ export default {
 			this.personObject.YEARSSTRING = '';
 			this.personObject.ACTIVE = false;
 			this.personObject.ID = '';
+			this.personObject.CLASSSTEACHERIMAGE = '';
 			// this.editMode = false;
 			// this.addMode = false;
 			this.fellowExperienceArray = [];
@@ -433,11 +487,14 @@ export default {
 	},
 	mounted() {
 		this.getPeopleTypes();
+		this.initUppy();
 	}
 }
 </script>
 
 <style scoped>
+.hideUPPY{display: none;}
+.showUPPY{display: inline;}
 
 
 
