@@ -121,8 +121,8 @@ export default {
 		snackbar: false,
 		text: `Saved`,
 		timeout: 1000,
-		picker: new Date().toISOString().substr(0, 10),
-		picker2: new Date().toISOString().substr(0, 10),
+		picker: new Date().toISOString().substring(0,10),
+		picker2: new Date().toISOString().substring(0,10),
 		eventTypes:[],
 		editMode:false,
 		newEventMode:false,
@@ -238,8 +238,8 @@ export default {
 					vm.newEventMode = false;
 					vm.clearEventObject();
 					vm.snackbar = true;
-					//vm.picker = new Date().toISOString().substr(0, 10);
-					//vm.picker2 = new Date().toISOString().substr(0, 10);
+					//vm.picker = new Date().toISOString().substring(0,10);
+					//vm.picker2 = new Date().toISOString().substring(0,10);
 				},
 				error: function (jqXHR, exception) {
 					var msg = "";
@@ -269,8 +269,8 @@ export default {
 				vm.getEventsCurrent();
 				vm.editMode = false;
 				vm.clearEventObject();
-				vm.picker = new Date().toISOString().substr(0, 10);
-				vm.picker2 = new Date().toISOString().substr(0, 10);
+				vm.picker = new Date().toISOString().substring(0,10);
+				vm.picker2 = new Date().toISOString().substring(0,10);
 			})
 		},
 		clearEventObject(){

@@ -105,7 +105,7 @@ export default {
 		editMode:false,
 		newClassMode:false,
 		classTeachersArray:[],
-		picker: new Date().toISOString().substr(0, 10),
+		picker: new Date().toISOString().substring(0, 10),
 		headers: [
 			{
 				text: "Class Date",
@@ -153,6 +153,7 @@ export default {
 		handleClick: function(value) {
 			this.getClassDetails(value.ID);
 			this.editMode = true;
+			this.$vuetify.goTo(this.pageHeight);
 		},
 		getClassTypes(){
 			var vm = this;
@@ -164,7 +165,7 @@ export default {
 		addNewClass(){
 			this.editMode = false;
 			this.newClassMode = true;
-			this.picker = new Date().toISOString().substr(0, 10);
+			this.picker = new Date().toISOString().substring(0,10);
 			this.classObject.CLASSDATE = '';
 			this.classObject.CLASSDATETIMESTRING='';
 			this.classObject.CLASSLOCATION='';
@@ -186,14 +187,15 @@ export default {
 			this.classObject.CLASSTEACHER='';
 			this.classObject.CLASSTITLE='';
 			this.classObject.ID = '';
-			this.picker = new Date().toISOString().substr(0, 10);
+			this.classObject.CLASSTEACHERID = '';
+			this.picker = new Date().toISOString().substring(0,10);
 		},
 		saveNewClass(){
 			var vm = this;
 			vm.classObject.CLASSDATE = vm.picker;
 			window.$.ajax({
 				type: "post",
-				url: "https://johncage.org/data/merce-data.cfc",
+				url: vm.dataURL,
 				dataType: "json",
 				data: {
 					method: "insertNewClass",
@@ -235,7 +237,7 @@ export default {
 			
 			window.$.ajax({
 				type: "post",
-				url: "https://johncage.org/data/merce-data.cfc",
+				url: vm.dataURL,
 				dataType: "json",
 				data: {
 					method: "updateClass",
@@ -285,6 +287,11 @@ export default {
 		this.getClassTypes();
 		this.createClassObjects();
 		this.getClassTeachers();
+	},
+	computed: {
+		pageHeight () {
+			return document.body.scrollHeight
+		}
 	}
 }
 </script>

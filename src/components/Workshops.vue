@@ -111,8 +111,8 @@ export default {
 		workShopTypes:[],
 		editMode:false,
 		newClassMode:false,
-		picker: new Date().toISOString().substr(0, 10),
-		picker2: new Date().toISOString().substr(0, 10),
+		picker: new Date().toISOString().substring(0,10),
+		picker2: new Date().toISOString().substring(0,10),
 		headers: [
 			{
 				text: "Title",
@@ -167,8 +167,8 @@ export default {
 		addNewClass(){
 			this.editMode = false;
 			this.newClassMode = true;
-			this.picker = new Date().toISOString().substr(0, 10);
-			this.picker2 = new Date().toISOString().substr(0, 10);
+			this.picker = new Date().toISOString().substring(0,10);
+			this.picker2 = new Date().toISOString().substring(0,10);
 			this.workShopObject.DATESTRING='';
 			this.workShopObject.LOCATION='';
 			this.workShopObject.LEADER='';
@@ -196,8 +196,8 @@ export default {
 			this.workShopObject.TITLE='';
 			this.workShopObject.WORKSHOPTYPE = 0;
 			this.workShopObject.ID = 0;
-			this.picker = new Date().toISOString().substr(0, 10);
-			this.picker2 = new Date().toISOString().substr(0, 10);
+			this.picker = new Date().toISOString().substring(0,10);
+			this.picker2 = new Date().toISOString().substring(0,10);
 		},
 		saveNewClass(){
 			var vm = this;
