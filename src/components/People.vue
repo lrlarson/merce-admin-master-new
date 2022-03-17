@@ -74,8 +74,13 @@
 				<div class="DashboardContainer hideUPPY" id="uppyHolder">Class Teacher Image</div>
 			</v-flex>
 			<v-flex md2 xs12  >
+				<div id="teacherHolder">
 				<v-img :src="'https://www.mercecunningham.org/images/danceImagesUpload/classImages/' + personObject.CLASSSTEACHERIMAGE ">
 				</v-img>
+				<span v-if="selectedPersonType == 4" >Image size must be 375x225, or of ratio 1.6</span>
+					<br />
+					<v-text-field disabled v-model="personObject.CLASSSTEACHERIMAGE" label="filename:" ></v-text-field>
+				</div>
 			</v-flex>
 			<v-flex md3 xs12 v-if="selectedPersonType===1" >
 				<v-text-field v-model="personObject.YEARSSTRING" label="Fellowship Years, comma separated"></v-text-field>
@@ -458,10 +463,10 @@ export default {
 					vm.personObject = vm.personArray[0];
 					vm.personObject.TEXT = vm.personObject.TEXT.replace(/[\u2018\u2019]/g, "'")
 							.replace(/[\u201C\u201D]/g, '"');
-					console.log(vm.personObject.CLASSSTEACHERIMAGE);
 					if (vm.selectedPersonType === 1){
 						vm.getFellowExperience(value.ID);
 					}
+					vm.$vuetify.goTo(vm.pageHeight);
 				})
 			},
 		clearExperience(){
@@ -488,6 +493,11 @@ export default {
 	mounted() {
 		this.getPeopleTypes();
 		this.initUppy();
+	},
+	computed: {
+		pageHeight () {
+			return document.body.scrollHeight
+		}
 	}
 }
 </script>
@@ -495,7 +505,8 @@ export default {
 <style scoped>
 .hideUPPY{display: none;}
 .showUPPY{display: inline;}
-
+ #teacherHolder{margin-left: 20px;
+ }
 
 
 </style>
