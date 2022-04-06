@@ -78,7 +78,7 @@ export default {
 			router.push({ name: "dance-detail", params: { id: value.ID } });
 		},
 		addDance(){
-		
+			router.push({ name: "dance-detail", params: { id: 0 } });
 		},
 		filterOnlyCapsText (value, search) {
 			return value != null &&

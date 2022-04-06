@@ -9,7 +9,16 @@
     <cffunction name="init" access="remote" returntype="any">
         <cfreturn this/>
     </cffunction> 
-        
+      
+    <cffunction name="getLatestLetter" access="remote"   returntype="Any" returnformat="JSON">
+        <cfquery name="id" datasource="merce_5">
+            select top 1 *
+            from tbl_DirectorsLetters
+            order by pubDate desc
+        </cfquery>
+        <cfreturn id>
+    </cffunction>
+
     <cffunction name="deleteWorkshop" access="remote"   returntype="Any" returnformat="JSON">
         <cfquery name="id" datasource="merce_5">
             delete from tbl_Workshops
@@ -956,7 +965,7 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
                     <cfreturn objectWrapper> 
     </cffunction>
 
-        <cffunction name="updateDanceDetails" access="remote" returntype="any" returnformat="JSON"> 
+    <cffunction name="updateDanceDetails" access="remote" returntype="any" returnformat="JSON"> 
     <cfargument name="danceObject" type="any" required="yes">
     <cfset danceObject = DeserializeJSON(danceObject)>
 
@@ -979,6 +988,57 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
     	</cfquery>
         <cfreturn 1>
     </cffunction>
+
+    <cffunction name="insertNewDance" access="remote" returntype="any" returnformat="JSON"> 
+        <cfargument name="danceObject" type="any" required="yes">
+        <cfset danceObject = DeserializeJSON(danceObject)>
+    
+            <cfquery datasource="merce_5" name="danceDetailsReturn">
+                insert into tbl_Works(
+                      workTitle,
+                      length,
+                      workLengthString,
+                      premiereDate,
+                      premiereVenue,
+                      premiereString,
+                      premiereCity,
+                      premiereCountry,
+                      workImage,
+                      workImageNotes,
+                      capsuleURL,
+                       link,
+                      mediaLink,
+                      hasRevival,
+                    workCollabSummary,
+                      description,
+                      premiereYear,
+                      timeSearch,
+                      yearsSearch )
+                      values (
+                      '#danceObject.WORKTITLE#' ,
+                    #danceObject.LENGTH# ,
+              '#danceObject.WORKLENGTHSTRING#' ,
+             '#danceObject.PREMIEREDATE#',
+             '#danceObject.PREMIEREVENUE#' ,
+             '#danceObject.PREMIERESTRING#' ,
+             '#danceObject.PREMIERECITY#' ,
+              '#danceObject.PREMIERECOUNTRY#' ,
+           '#danceObject.WORKIMAGE#',
+             '#danceObject.WORKIMAGENOTES#',
+            '#danceObject.CAPSULEURL#',
+            '#danceObject.LINK#',
+           '#danceObject.MEDIALINK#' ,
+           #danceObject.HAS_REVIVAL#,
+           '#danceObject.WORKCOLLABSUMMARY#',
+                      '#danceObject.DESCRIPTION#',
+                      '#danceObject.PREMIEREYEAR#',
+                      '#danceObject.TIMESEARCH#',
+                      '#danceObject.YEARSSEARCH#' 
+                      )
+                      select @@identity
+            </cfquery>
+            <cfreturn danceDetailsReturn>
+        </cffunction>
 
 
 
@@ -1448,7 +1508,8 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
                 personType,
                 active,
                 moreBio,
-                status)
+                status,
+                classsTeacherImage)
             values (
               <cfif StructKeyExists(person, "YEARSTRING")>
                '#person.YEARSTRING#',
@@ -1458,7 +1519,8 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
             #person.PERSONTYPE#,
             #person.ACTIVE#,
             '#person.MOREBIO#',
-            '#person.STATUS#'
+            '#person.STATUS#',
+            '#person.CLASSSTEACHERIMAGE#'
             )
             select @@identity
         </cfquery>
@@ -1468,6 +1530,8 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
     <cfreturn objectWrapper>
     </cffunction>
 
+
+    
 
     <cffunction name="getExperience" access="remote" returntype="any" returnformat="JSON">
         <cfargument name="id" type="any">
@@ -1497,12 +1561,25 @@ SELECT     tbl_Music.id AS data, dbo.tbl_Composers.Composer_LN, dbo.tbl_Composer
             personType = #person.PERSONTYPE#,
             active = #person.ACTIVE#,
             moreBio = '#person.MOREBIO#',
-            status = '#person.STATUS#'
+            status = '#person.STATUS#',
+            classsTeacherImage = '#person.CLASSSTEACHERIMAGE#'
             where id = #person.ID#
         </cfquery>
         <cfreturn 1>
     </cffunction>
     
+    <cffunction name="getTeachers" access="remote" returntype="any" returnformat="JSON">
+        <cfquery name="thisQuery" datasource="merce_5">
+           select id,fellowName from tbl_People
+            where personType = 4
+            order by fellowName
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(thisQuery) />
+            <cfset objectWrapper = structNew()>
+            <cfset objectWrapper.results = #arrGirls#>
+            <cfreturn objectWrapper> 
+        </cffunction>
+
      <cffunction name="getPeopleTypes" access="remote" returntype="Any" returnformat="JSON">
     <cfquery name="queryName" datasource="merce_5">
         select id as data, type as label
@@ -1998,9 +2075,9 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
         <cfset setWeek = #week(classObject.classDate)#>
         <cfquery name="newClass" datasource="merce_5">
             insert into tbl_Classes
-            (classType, classDate, classDateTimeString, classTitle, classLocation, classTeacher,week)
+            (classType, classDate, classDateTimeString, classTitle, classLocation, classTeacher,week,classTeacherID)
             values
-            (#classObject.CLASSTYPEID#,'#classObject.CLASSDATE#','#classObject.CLASSDATETIMESTRING#','#classObject.CLASSTITLE#','#classObject.CLASSLOCATION#','#classObject.CLASSTEACHER#',#setWeek#
+            (#classObject.CLASSTYPEID#,'#classObject.CLASSDATE#','#classObject.CLASSDATETIMESTRING#','#classObject.CLASSTITLE#','#classObject.CLASSLOCATION#','#classObject.CLASSTEACHER#',#setWeek#,#classObject.CLASSTEACHERID#
             )
         select @@IDENTITY
         </cfquery>
@@ -2008,15 +2085,13 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
     </cffunction>
 
    
-
-
-
     <cffunction name="getClass" access="remote" returntype="any" returnformat="JSON">
         <cfargument name="id" type="any" required="true">
         <cfquery name="merceClass" datasource="merce_5">
-            select week,convert(varchar(16), classDate, 23) as classDate,tbl_Classes.id,classDateTimeString,classLocation,classTeacher,classTitle,tbl_ClassTypes.classType,tbl_Classes.classType as classTypeID from tbl_Classes inner join tbl_ClassTypes
-            on tbl_Classes.classType = tbl_ClassTypes.id
-            where tbl_Classes.id = #id#
+            select week,convert(varchar(16), classDate, 23) as classDate,tbl_Classes.id,classDateTimeString,classLocation,classTeacher,classTitle,tbl_ClassTypes.classType,tbl_Classes.classTeacherID,tbl_People.fellowName,tbl_Classes.classType as classTypeID
+            from tbl_Classes inner join tbl_ClassTypes
+            on tbl_Classes.classType = tbl_ClassTypes.id left outer join tbl_People on tbl_People.id = tbl_Classes.classTeacherID
+            where tbl_Classes.id =#id#
         </cfquery>
         <cfset arrGirls = QueryToStruct(merceClass)/>
         <cfset objectWrapper = structNew()>
@@ -2065,7 +2140,8 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
             classTitle = '#classObject.CLASSTITLE#',
             classDateTimeString = '#classObject.CLASSDATETIMESTRING#',
             classLocation = '#classObject.CLASSLOCATION#',
-            week = #setWeek#
+            week = #setWeek#,
+            classTeacherID = #classObject.CLASSTEACHERID#
             where id = #classObject.ID#
         </cfquery>
         <cfreturn 1>

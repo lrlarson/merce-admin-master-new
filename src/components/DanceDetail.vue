@@ -9,6 +9,11 @@
 			</v-card>
 		</v-flex>
 	</v-layout>
+	<v-layout row v-if="danceAddMode">
+		<v-flex md4 sm12>
+			<v-text-field v-model="danceObject.WORKTITLE" label="New Work Title"></v-text-field>
+		</v-flex>
+	</v-layout>
 	<v-layout row>
 		<v-flex md4 sm12>
 			<v-text-field disabled label="Work Description"></v-text-field>
@@ -71,15 +76,25 @@
 		<v-col md2 sm12>
 			<v-checkbox v-model="danceObject.HASREVIVAL" label="Has Revival Information"></v-checkbox>
 		</v-col>
+		<v-col md2 sm12>
+			<v-text-field v-model="danceObject.YEARSSEARCH" label="Years Search"></v-text-field>
+		</v-col>
+		<v-col md2 sm12>
+			<v-text-field v-model="danceObject.TIMESEARCH" label="Time Search"></v-text-field>
+		</v-col>
+		<v-col md2 sm12>
+			<v-text-field v-model="danceObject.LINK" label="Link"></v-text-field>
+		</v-col>
 		<v-col md3 sm12>
-			<v-btn color="green" @click="updateDance">Save General Dance Edits</v-btn>
+			<v-btn v-if="danceEditMode" color="green" @click="updateDance">Save General Dance Edits</v-btn>
+			<v-btn v-if="danceAddMode" color="blue" @click="insertNewDance">Save New Dance</v-btn>
 		</v-col>
 		<v-col md3 sm12>
 		</v-col>
 	</v-row>
 	
 	
-	<v-container>
+	<v-container v-if="danceAddMode!=true">
 		<v-card>
 			<v-tabs>
 				<v-tab style="font-size: large" ripple key="1" @click="dancerTabClick" >Dancers</v-tab>
@@ -99,7 +114,7 @@
 										<td><em>Original</em></td>
 									</tr>
 									<tr
-											v-for="item in categoriesForBookArray"
+											v-for="item in associatedDancersArray"
 											:key="item.ID"
 											@click="associatedDancerClick(item.ID)"
 									>
@@ -476,6 +491,8 @@ export default {
 		newDancerID:null,
 		newCostumerID:null,
 		selectedNewCostumerObject:{},
+		danceEditMode:false,
+		danceAddMode:false,
 		editorConfig: {
 		},
 	
@@ -1224,6 +1241,7 @@ export default {
 		},
 		updateDance(){
 			let vm = this;
+			
 			window.$.ajax({
 				type: "post",
 				url: "https://mercecunningham.org/data/merce-data.cfc",
@@ -1258,6 +1276,69 @@ export default {
 				}
 			});
 		},
+		insertNewDance(){
+			let vm = this;
+			vm.danceObject.DESCRIPTION = vm.danceObject.DESCRIPTION.replace(/[\u2018\u2019]/g, "'")
+					.replace(/[\u201C\u201D]/g, '"');
+			vm.danceObject.PREMIEREDATE = vm.picker;
+			window.$.ajax({
+				type: "post",
+				url: "https://mercecunningham.org/data/merce-data.cfc",
+				dataType: "json",
+				data: {
+					method: "insertNewDance",
+					danceObject: JSON.stringify(vm.danceObject)
+				},
+				success: function (data) {
+					vm.danceID = data.DATA;
+					vm.danceObject.ID = vm.danceID;
+					vm.snackbar = true;
+					vm.danceAddMode=false;
+					vm.danceEditMode = true;
+					// vm.clearMediaObject();
+				},
+				error: function (jqXHR, exception) {
+					var msg = "";
+					if (jqXHR.status === 0) {
+						msg = "Not connect.\n Verify Network.";
+					} else if (jqXHR.status == 404) {
+						msg = "Requested page not found. [404]";
+					} else if (jqXHR.status == 500) {
+						msg = "Internal Server Error [500].";
+					} else if (exception === "parsererror") {
+						msg = "Requested JSON parse failed.";
+					} else if (exception === "timeout") {
+						msg = "Time out error.";
+					} else if (exception === "abort") {
+						msg = "Ajax request aborted.";
+					} else {
+						msg = "Uncaught Error.\n" + jqXHR.responseText;
+					}
+					alert(msg);
+				}
+			});
+		},
+		createDanceObject(){
+			this.danceObject.WORKTITLE = '';
+					this.danceObject.LENGTH = 0;
+					this.danceObject.WORKLENGTHSTRING = '';
+					this.danceObject.PREMIEREDATE = null;
+					this.danceObject.PREMIEREVENUE = '';
+					this.danceObject.PREMIERESTRING = '';
+					this.danceObject.PREMIERECITY='';
+					this.danceObject.PREMIERECOUNTRY = '';
+					this.danceObject.WORKIMAGE = '';
+					this.danceObject.WORKIMAGENOTES='';
+					this.danceObject.CAPSULEURL = '';
+					this.danceObject.LINK = '';
+					this.danceObject.MEDIALINK ='';
+					this.danceObject.HAS_REVIVAL = 0;
+					this.danceObject.WORKCOLLABSUMMARY='';
+					this.danceObject.DESCRIPTION='';
+					this.danceObject.PREMIEREYEAR='',
+					this.danceObject.TIMESEARCH='';
+					this.danceObject.YEARSSEARCH = '';
+		},
 		initUppy(){
 			const uppyLarge = Uppy({ debug: true })
 					.use(Dashboard, {
@@ -1284,9 +1365,18 @@ export default {
 	},
 	created() {
 		this.danceID =  this.$route.params.id;
-		this.getDanceDetails(this.danceID);
-		this.getAvailableDancers(this.danceID);
-		this.getAssociatedDancers(this.danceID);
+		if (this.danceID !=0 ) {
+			this.getDanceDetails(this.danceID);
+			this.getAvailableDancers(this.danceID);
+			this.getAssociatedDancers(this.danceID);
+			this.danceEditMode= true;
+			this.danceAddMode = false;
+		}else{
+			this.danceEditMode= false;
+			this.danceAddMode = true;
+			this.createDanceObject();
+			
+		}
 	},
 	mounted() {
 		this.initUppy();

@@ -126,7 +126,7 @@
 				dark
 		>
 			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-			<v-toolbar-title>Merce Cunningham Trust -- App. Version: 1.4.1 Production</v-toolbar-title>
+			<v-toolbar-title>Merce Cunningham Trust -- App. Version: 1.5.1 Production</v-toolbar-title>
 		</v-app-bar>
 		
 		<v-main>
