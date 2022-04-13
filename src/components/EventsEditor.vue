@@ -223,6 +223,10 @@ export default {
 			if (!vm.eventObject.DISPLAYORDER){
 				vm.eventObject.DISPLAYORDER = 0;
 			}
+			if (!vm.eventObject.EVENTTYPE) {
+				alert('Must Select an Event Type');
+				return;
+			}
 			window.$.ajax({
 				type: "post",
 				url: "https://mercecunningham.org/data/merce-data.cfc",
