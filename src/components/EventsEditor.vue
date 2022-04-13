@@ -180,6 +180,8 @@ export default {
 			let vm = this;
 			vm.eventObject.EVENTSTARTDATE = vm.picker;
 			vm.eventObject.EVENTENDDATE = vm.picker2;
+			vm.eventObject.EVENTDESCRIPTION = vm.eventObject.EVENTDESCRIPTION.replace(/[\u2018\u2019]/g, "'")
+					.replace(/[\u201C\u201D]/g, '"');
 			window.$.ajax({
 				type: "post",
 				url: "https://mercecunningham.org/data/merce-data.cfc",
@@ -227,6 +229,8 @@ export default {
 				alert('Must Select an Event Type');
 				return;
 			}
+			vm.eventObject.EVENTDESCRIPTION = vm.eventObject.EVENTDESCRIPTION.replace(/[\u2018\u2019]/g, "'")
+					.replace(/[\u201C\u201D]/g, '"');
 			window.$.ajax({
 				type: "post",
 				url: "https://mercecunningham.org/data/merce-data.cfc",
