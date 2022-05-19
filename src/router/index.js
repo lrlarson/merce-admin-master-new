@@ -15,6 +15,7 @@ import LicenseDetail from "@/components/LicenseDetail";
 import WebVideos from "@/components/WebVideos";
 import Workshops from "@/components/Workshops";
 import Music from "@/components/Music";
+import HomePageEditor from "@/components/HomePageEditor";
 import store from "@/store";
 
 
@@ -101,6 +102,11 @@ const routes = [
     name:'Music',
     component:Music
   },
+  {
+    path:'/HomePageEditor',
+    name:'HomePageEditor',
+    component: HomePageEditor
+  }
 
 
 ]

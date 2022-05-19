@@ -116,6 +116,16 @@
 					</v-list-item-content>
 				</v-list-item>
 				
+				<v-list-item link>
+					<v-list-item-action>
+						<router-link to="/HomePageEditor">New Home Page
+						</router-link>
+					</v-list-item-action>
+					<v-list-item-content>
+						<v-list-item-title>Edit Home Page</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				
 				
 			</v-list>
 		</v-navigation-drawer>

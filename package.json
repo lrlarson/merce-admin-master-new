@@ -28,6 +28,7 @@
     "core-js": "^3.6.5",
     "jquery": "^3.6.0",
     "jspdf": "^2.3.1",
+    "mammoth": "^1.4.21",
     "moment": "^2.29.1",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
