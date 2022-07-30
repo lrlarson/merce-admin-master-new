@@ -137,7 +137,7 @@ export default {
 			{text: "End Date", value: "EVENTENDDATE"},
 			{text:"Date String", value:"EVENTDATESTRING"},
 			{text:"Event Name", value:"EVENTNAME"},
-			{text:"HP Display Order", value: "DISPLAYORDER"}
+			{text:"Publish?", value: "EVENTPUBLISH"}
 		],
 	}),
 	methods: {
