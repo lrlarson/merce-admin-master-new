@@ -73,7 +73,7 @@
 	</v-row>
 	<v-row>
 		<v-col md-2>
-			<div class="DashboardContainer">Event Image</div>
+			<div class="DashboardContainer">Event Image -- must be 375x225px</div>
 		</v-col>
 		<v-col m-2>
 			<v-text-field v-model="eventObject.EVENTIMAGE" disabled></v-text-field>
