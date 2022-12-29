@@ -10,6 +10,168 @@
         <cfreturn this/>
     </cffunction> 
       
+
+    <cffunction name="getOneMemory" access="remote" returntype="any" returnformat="JSON" >
+        <cfargument name="id" type="numeric" required="true" >
+        <cfquery name=memory datasource="merce5">
+            select tbl_Remember.id, image, name,  publish, headline, localVideo, type, memory_text, memoryImage, memoryCaption,tbl_MemoryTypes.memoryType
+            from tbl_Remember
+            inner join tbl_MemoryTypes on tbl_MemoryTypes.id = tbl_Remember.type
+            where tbl_Remember.id = #id#  
+        </cfquery>
+     <cfset arrGirls = QueryToStruct(memory) />
+     <cfset objectWrapper = structNew()>
+     <cfset objectWrapper.results = #arrGirls#>
+     <cfreturn objectWrapper> 
+    </cffunction>
+
+    <cffunction name="getMemoryTypes" access="remote" returntype="any" returnformat="JSON">
+        <cfquery name="types" datasource="merce5">
+            select id as data, memoryType as label from tbl_MemoryTypes
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(types) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
+
+    <cffunction name="getMemories" access="remote" returntype="any" returnformat="JSON">
+        <cfquery name="memories" datasource="merce5">
+            select tbl_Remember.id, image, name,  publish, headline, localVideo, type, memory_text, memoryImage, memoryCaption,tbl_MemoryTypes.memoryType
+            from tbl_Remember
+            inner join tbl_MemoryTypes on tbl_MemoryTypes.id = tbl_Remember.type
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(memories) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+    
+    
+    <cffunction name="getAnnouncements" access="remote" returntype="any" returnformat="JSON">
+        <cfquery name="popup" datasource="merce5">
+            select convert(varchar(16), pubDateStart, 23) as pubDateStart,convert(varchar(16), pubDateEnd, 23) as pubDateEnd,display,text
+            from tbl_PopUpContent
+            where id=1
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(popup) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
+
+    <cffunction name="updateShowcaseLink" access="remote" returntype="any" returnformat="JSON">
+        <cfargument name="showcaseObject" type="any">
+        <cfset showcaseObject = DeserializeJSON(showcaseObject)> 
+        <cfquery name="link" datasource="merce_5">
+            update tbl_HomePageShowcase
+            set showcaseLink = '#showcaseObject.SHOWCASELINK#'
+            where id = #showcaseObject.ID#
+        </cfquery>
+        <cfreturn 1>   
+    </cffunction>
+
+    <cffunction name="getShowCaseLink" access="remote" returntype="any" returnformat="JSON">
+        <cfquery name="link" datasource="merce_5">
+            select * from tbl_HomePageShowcase
+            where id = 1
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(link) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
+
+    <cffunction name="saveNewLetter" access="remote" returntype="any" returnformat="JSON">
+        <cfargument name="letterObject" type="any" required="true">
+        <cfset letterObject = DeserializeJSON(letterObject)> 
+        <cfif letterObject.PUBLISH EQ 'true'>
+            <cfset letterObject.PUBLISH = 1>
+        <cfelseif letterObject.PUBLISH EQ 'false'>  
+            <cfset letterObject.PUBLISH = 0>
+        </cfif>
+        <cfquery name="newLetter" datasource="merce_5">
+            insert into tbl_DirectorsLetters(text, 
+                                 pubDate, 
+                                 publish, 
+                                 datestring)
+                                 values(
+                                    '#letterObject.TEXT#',
+                                    '#letterObject.PUBDATE#',  
+                                    #letterObject.PUBLISH#,
+                                    '#letterObject.DATESTRING#'
+                                 )
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+
+    <cffunction name="editMessage" access="remote" returntype="any" returnformat="JSON">
+        <cfargument name="messageObject" type="any" required="true">
+        <cfset messageObject = DeserializeJSON(messageObject)> 
+        <cfif messageObject.DISPLAY EQ 'true'>
+            <cfset messageObject.DISPLAY = 1>
+        <cfelseif messageObject.DISPLAY EQ 'false'>  
+            <cfset messageObject.DISPLAY = 0>
+        </cfif>
+        <cfquery name="message" datasource="merce_5">
+            update tbl_PopUpContent
+            set display = #messageObject.DISPLAY#,
+            pubDateStart = '#messageObject.PUBDATESTART#',
+            pubDateEnd = '#messageObject.PUBDATEEND#',
+            text = '#messageObject.TEXT#'
+            where id = 1
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+
+    <cffunction name="editLetter" access="remote" returntype="any" returnformat="JSON">
+        <cfargument name="letterObject" type="any" required="true">
+        <cfset letterObject = DeserializeJSON(letterObject)> 
+        <cfif letterObject.PUBLISH EQ 'true'>
+            <cfset letterObject.PUBLISH = 1>
+        <cfelseif letterObject.PUBLISH EQ 'false'>  
+            <cfset letterObject.PUBLISH = 0>
+        </cfif>
+        <cfquery name="editLetter" datasource="merce_5">
+            update tbl_DirectorsLetters
+            set text = '#letterObject.TEXT#',
+            pubDate = '#letterObject.PUBDATE#',
+            publish = #letterObject.PUBLISH#,
+            datestring = '#letterObject.DATESTRING#'
+            where id = #letterObject.ID#
+        </cfquery>
+        <cfreturn 1>
+    </cffunction>
+
+
+    <cffunction name="getDirectorLetters" access="remote" returntype="any" returnformat="JSON">
+         <cfquery name='letters' datasource="merce_5">
+         select datestring,id,convert(varchar(16), pubDate, 23) as pubDate,publish,text 
+         from tbl_DirectorsLetters
+            order by pubDate desc
+         </cfquery>   
+        <cfset arrGirls = QueryToStruct(letters) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
+    <cffunction name="getLetter" access="remote"   returntype="Any" returnformat="JSON">
+        <cfargument name= "letterID" type="any" required="true">
+        <cfquery name="id" datasource="merce_5">
+            select datestring,id,convert(varchar(16), pubDate, 23) as pubDate,publish,text 
+            from tbl_DirectorsLetters
+           where id = #letterID#
+        </cfquery>
+        <cfset arrGirls = QueryToStruct(id) />
+        <cfset objectWrapper = structNew()>
+        <cfset objectWrapper.results = #arrGirls#>
+        <cfreturn objectWrapper> 
+    </cffunction>
+
     <cffunction name="getLatestLetter" access="remote"   returntype="Any" returnformat="JSON">
         <cfquery name="id" datasource="merce_5">
             select top 1 *
@@ -2108,9 +2270,17 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
             select tbl_Classes.id, week,convert(varchar(16), classDate, 107) as classDate,classDateTimeString,classLocation,classTeacher,classTitle,tbl_ClassTypes.classType,tbl_Classes.classType as classTypeID  from tbl_Classes inner join tbl_ClassTypes
             on tbl_Classes.classType = tbl_ClassTypes.id
             <cfif current>
+                <cfif week lt 52>
                 where week >= #thisWeek# AND classDate > DATEADD(DAY, -7, GETDATE())
+                <cfelse>
+                where (week = 52 OR week = 1) AND classDate > DATEADD(DAY, -7, GETDATE())     
+                </cfif>
             </cfif>
+            <cfif week lt 52>
             order by week,classDate
+            <cfelse>
+                order by week DESC,classDate  
+            </cfif>
         </cfquery>
         <cfset arrGirls = QueryToStruct(classes)/>
         <cfset objectWrapper = structNew()>

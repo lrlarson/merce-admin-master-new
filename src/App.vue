@@ -126,6 +126,16 @@
 					</v-list-item-content>
 				</v-list-item>
 				
+				<v-list-item link>
+					<v-list-item-action>
+						<router-link to="/MemoriesEditor">Memories Editor
+						</router-link>
+					</v-list-item-action>
+					<v-list-item-content>
+						<v-list-item-title>Edit Memories</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				
 				
 			</v-list>
 		</v-navigation-drawer>

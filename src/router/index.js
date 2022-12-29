@@ -16,6 +16,7 @@ import WebVideos from "@/components/WebVideos";
 import Workshops from "@/components/Workshops";
 import Music from "@/components/Music";
 import HomePageEditor from "@/components/HomePageEditor";
+import MemoryEditor from "@/components/MemoryEditor.vue";
 import store from "@/store";
 
 
@@ -106,6 +107,11 @@ const routes = [
     path:'/HomePageEditor',
     name:'HomePageEditor',
     component: HomePageEditor
+  },
+  {
+    path:'/MemoriesEditor',
+    name: 'MemoryEditor',
+    component: MemoryEditor
   }
 
 
