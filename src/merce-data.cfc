@@ -2265,22 +2265,20 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
         <cfargument name="current" type="any" default="true">
         <cfset thisDate = #now()#>
         <cfset thisWeek = #Week(thisDate)#>
+        <cfset nextWeek = thisWeek + 1>
         <cfset current = true>
         <cfquery name="classes" datasource="merce_5">
             select tbl_Classes.id, week,convert(varchar(16), classDate, 107) as classDate,classDateTimeString,classLocation,classTeacher,classTitle,tbl_ClassTypes.classType,tbl_Classes.classType as classTypeID  from tbl_Classes inner join tbl_ClassTypes
             on tbl_Classes.classType = tbl_ClassTypes.id
             <cfif current>
-                <cfif week lt 52>
-                where week >= #thisWeek# AND classDate > DATEADD(DAY, -7, GETDATE())
-                <cfelse>
-                where (week = 52 OR week = 1) AND classDate > DATEADD(DAY, -7, GETDATE())     
+                
+                where (week= #thisWeek# OR week=#nextWeek#) AND classDate > DATEADD(DAY, -7, GETDATE())
+                
                 </cfif>
-            </cfif>
-            <cfif week lt 52>
+            
+     
             order by week,classDate
-            <cfelse>
-                order by week DESC,classDate  
-            </cfif>
+            
         </cfquery>
         <cfset arrGirls = QueryToStruct(classes)/>
         <cfset objectWrapper = structNew()>
