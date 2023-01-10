@@ -2272,7 +2272,7 @@ WHERE     (tbl_Events.eventEndDate > GETDATE())
             on tbl_Classes.classType = tbl_ClassTypes.id
             <cfif current>
                 
-                where (week= #thisWeek# OR week=#nextWeek#) AND classDate > DATEADD(DAY, -7, GETDATE())
+                where week >= #thisWeek# AND classDate > DATEADD(DAY, -7, GETDATE())
                 
                 </cfif>
             
