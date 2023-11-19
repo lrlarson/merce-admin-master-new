@@ -156,6 +156,7 @@ export default {
 		handleClick: function(value) {
 			this.getWorkShopDetails(value.ID);
 			this.editMode = true;
+			this.$vuetify.goTo(this.pageHeight);
 		},
 		getWorkshopTypes(){
 			var vm = this;
@@ -299,6 +300,11 @@ export default {
 		this.getWorkShops();
 		this.getWorkshopTypes();
 		this.createClassObjects();
+	},
+	computed: {
+		pageHeight () {
+			return document.body.scrollHeight
+		}
 	}
 }
 </script>
