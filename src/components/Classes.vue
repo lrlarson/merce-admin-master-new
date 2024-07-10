@@ -1,4 +1,4 @@
-<template>
+a<template>
 <v-container>
 	<v-layout row wrap align-center>
 		<v-flex >
@@ -19,7 +19,6 @@
 	</v-layout>
 	<v-layout row wrap>
 		<v-container grid-list-md >
-			
 			<v-data-table
 					:headers="headers"
 					:items="classes"
