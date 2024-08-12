@@ -50,7 +50,7 @@
 		<v-row>
 			<v-col md-2 lg-2>
 				<v-text-field
-						v-model="workShopObject.DATESTRING" label="Date/Time Text"></v-text-field>
+						v-model="workShopObject.DATESTRING" label="Date/Time Text" hint="e.g. Aug. 6-12, 2024"></v-text-field>
 			</v-col>
 			<v-col md-2 lg-2>
 				<v-text-field

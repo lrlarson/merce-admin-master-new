@@ -52,7 +52,7 @@
 	</v-row>
 	<v-row>
 		<v-col md-3>
-			<v-text-field v-model="eventObject.EVENTDATESTRING" label="DateTime String"></v-text-field>
+			<v-text-field v-model="eventObject.EVENTDATESTRING" label="DateTime String" hint="Aug. 12, 2024 - Oct. 3, 2024"></v-text-field>
 		</v-col>
 		<v-col md-3>
 			<v-select

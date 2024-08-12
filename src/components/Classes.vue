@@ -38,7 +38,7 @@ a<template>
 		</v-col>
 		<v-col md-2 lg-2>
 			<v-text-field
-			v-model="classObject.CLASSDATETIMESTRING" label="Date/Time Text"></v-text-field>
+			v-model="classObject.CLASSDATETIMESTRING" label="Date/Time Text" hint="e.g. Tues Aug 20, 2024"></v-text-field>
 		</v-col>
 		<v-col md-2 lg-2>
 			<v-text-field
@@ -119,6 +119,7 @@ export default {
 		
 		],
 	}),
+	
 	methods: {
 		
 		getRateMessage(){
@@ -188,6 +189,7 @@ export default {
 			this.classObject.ID = '';
 			this.classObject.CLASSTEACHERID = '';
 			this.picker = new Date().toISOString().substring(0,10);
+			
 		},
 		saveNewClass(){
 			var vm = this;
@@ -290,6 +292,18 @@ export default {
 	computed: {
 		pageHeight () {
 			return document.body.scrollHeight
+		},
+		formattedDate() {
+			const date = this.picker ? new Date(this.picker) : new Date();
+			const options = {
+				month: 'short',  // "Aug"
+				day: 'numeric',  // "8"
+				year: 'numeric'  // "2024"
+			};
+			const formattedDate = date.toLocaleDateString('en-US', options);
+			
+			// Add the dot after the month abbreviation
+			return formattedDate.replace(',', '.');
 		}
 	}
 }
