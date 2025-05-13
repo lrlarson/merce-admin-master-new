@@ -72,6 +72,15 @@ a<template>
 					item-value="ID"
 			></v-select>
 		</v-col>
+		<v-col md-2 lg-2>
+			<v-select
+					label="Class Host"
+					v-model="classObject.CLASS_HOST"
+					:items="classHosts"
+					item-text="HOST"
+					item-value="ID"
+			></v-select>
+		</v-col>
 	</v-row>
 	<v-row>
 		<v-col md-2 lg-2>
@@ -101,6 +110,7 @@ export default {
 		class:[],
 		classObject:{},
 		classTypes:[],
+		classHosts:[],
 		editMode:false,
 		newClassMode:false,
 		classTeachersArray:[],
@@ -131,6 +141,13 @@ export default {
 			.then(function (result){
 				vm.classes = result.data.RESULTS;
 			})
+		},
+		getClassHosts(){
+			var vm = this;
+			vm.axios.get(vm.dataURL + 'method=getClassHosts')
+					.then(function(result){
+						vm.classHosts = result.data.RESULTS;
+					})
 		},
 		getClassTeachers(){
 			var vm= this;
@@ -288,6 +305,7 @@ export default {
 		this.getClassTypes();
 		this.createClassObjects();
 		this.getClassTeachers();
+		this.getClassHosts();
 	},
 	computed: {
 		pageHeight () {
